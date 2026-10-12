@@ -4,13 +4,15 @@ The requested scope now includes **Talion as the visible player character in Hog
 
 **Implementation status: blocked before asset conversion.** No Talion mesh, rig or textures are present; no playable Talion model or Hogwarts character replacement has been produced. The Windows installation cannot be accessed from the cloud session. The portable rival mechanic remains independent of the visual character feature.
 
+The smaller [Creator Kit appearance slice](CREATOR_KIT_APPEARANCE.md) now implements original placeholder asset tooling and follows the official HairStyle workflow. Its controller, movement, animations, combat and progression stay native. It has not yet run in the Kit or game and does not supply Talion's model.
+
 ## Asset and host route
 
 Use Talion assets only from the user's own Shadow of War installation, processed into a private working folder outside the project/package. Distribute original conversion code or instructions, not converted retail models/textures. No third-party model rip or game archive is included in this project.
 
 The Shadow of War knowledge-base note demonstrates archive extraction with QuickBMS and `shadow_of_mordor.bms` version 0.4. That evidence concerns LTAR archives and database files, not a decoded skinned Talion export. QuickBMS archive extraction does not by itself produce a character ready for Blender or Unreal. The Talion archive entry, skinned mesh format, skeleton and texture conversion remain to be established from the owned install; no converter is being claimed.
 
-On the Hogwarts side, investigate a supported character appearance replacement/import workflow on the actual installed build. Official Creator Kit is a candidate, but its current asset-import/replacement capabilities were not verified here. A build-matched custom mesh replacement is another candidate; the community UE4SS projects inspected for rivals do not establish a complete playable-character model swap pipeline. The exact character assets and override mechanism must be verified before cooking any package.
+On the Hogwarts side, the official Creator Kit's player-avatar/custom skeletal-mesh instructions have now been read. The initial implementation uses a new HairStyle with a mod-owned CharacterPiece and original marker mesh. Extending this to Talion's head/body needs appropriate native part types, facial/animation compatibility and owned source conversion; it has not been verified. The community UE4SS projects inspected for rivals do not establish a complete playable-character model swap pipeline.
 
 ## Source-inspected leads and limits
 

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "profile": "hair_marker",
+  "parts": {
+    "head": {
+      "bone": null,
+      "radius_start_ratio": null,
+      "radius_end_ratio": null,
+      "length_start_ratio": 0.65,
+      "length_end_ratio": 1.3
+    }
+  }
+}

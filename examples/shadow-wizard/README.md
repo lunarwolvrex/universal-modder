@@ -1,6 +1,10 @@
-# Shadow Wizard: rival-memory prototype
+# Shadow Wizard: appearance tools and rival-memory prototype
 
-An original first slice for **Hogwarts Legacy with persistent rivals inspired by Shadow of War and Talion as the player character**. This build runs the Lua mechanic in a synthetic host. **It is not an installable Hogwarts mod:** automatic enemy tracking, native combat/save integration and the Talion character replacement are unfinished.
+An original first slice for **Hogwarts Legacy with persistent rivals inspired by Shadow of War and Talion as the player character**. The repository now includes an official Creator Kit appearance workflow for an original hair-slot placeholder, Blender generation/validation, a guarded editor importer and private import-bundle preparation. The Lua rival mechanic still runs in a synthetic host.
+
+**No game-installable mod has been built or tested here.** Creator Kit avatar assembly/cloud cooking and Hogwarts testing require the Windows PC. Talion assets and automatic rival/combat/save integration remain unfinished. Generated rig/Kit assets stay private and are excluded from GitHub.
+
+For the smallest native appearance test, follow [Creator Kit authoring, installation and the in-game checklist](docs/CREATOR_KIT_APPEARANCE.md). This uses the documented new HairStyle / CharacterPiece route while retaining native gameplay; it avoids persistent look overrides.
 
 The prototype remembers an enemy across encounters and disk reloads, promotes a rival after a player defeat, and recommends bounded adaptations to repeated spell categories. Hogwarts should retain its native movement, spells, combat and quest behavior. Rules use illustrative tuning rather than retail Shadow of War data; no game assets or extracted code are included.
 
@@ -33,13 +37,13 @@ From `examples/shadow-wizard` in your Windows checkout, run this read-only probe
 powershell -NoProfile -File .\tools\probe-hogwarts.ps1
 ```
 
-It defaults to your reported path, `C:\Program Files (x86)\Steam\steamapps\common\Hogwarts Legacy`. For another Steam library, pass `-GameRoot 'D:\SteamLibrary\steamapps\common\Hogwarts Legacy'`. Version 2 also checks Hogwarts package-format counts and Shadow of War metadata in that Steam library. For a source install elsewhere, add `-ShadowOfWarRoot` with its actual path. Return the JSON output to continue build-specific integration. It reads manifests and file metadata only, changes no files, starts no processes and collects no credentials or save/model contents. The probe has been source-reviewed here; Windows execution remains unverified.
+It defaults to your reported path, `C:\Program Files (x86)\Steam\steamapps\common\Hogwarts Legacy`. For another Steam library, pass `-GameRoot 'D:\SteamLibrary\steamapps\common\Hogwarts Legacy'`. Version 3 checks Hogwarts package formats, Shadow of War metadata and Creator Kit executable/engine-build metadata. For installations elsewhere, add `-ShadowOfWarRoot` or `-CreatorKitRoot` with the actual path. Return its JSON to continue build-specific integration. It reads metadata only, changes no files, starts no processes and collects no credentials or save/model contents. The probe has been source-reviewed here; Windows execution remains unverified.
 
 ## Integration research and next slice
 
 The source-inspected Hogwarts projects [Wandsong](https://github.com/matalvernaz/wandsong/tree/af85d885df6fa5193ec117002348eef7bbd505cf) and [HL-UE4SS](https://github.com/igromanru/HL-UE4SS/tree/c24de144ec2475f07ed96ced223d68a11c87a28a) demonstrate community Lua tooling. They use different UE4SS builds; compatibility must be checked against your Steam build rather than assuming the latest works. This prototype is not based on copied code from either project.
 
-Wandsong's newer combat code explicitly labels callback delivery unproven. Its `OnNPC_Damaged` observation lacks a validated victim/spell identity; runtime actor paths do not establish persistent IDs. No validated player-death or save-slot API was found in the inspected source. These block automatic rival behavior. Official Creator Kit availability and suitability were not verified because relevant official sites were inaccessible from this session; it remains an alternative to evaluate.
+Wandsong's newer combat code explicitly labels callback delivery unproven. Its `OnNPC_Damaged` observation lacks a validated victim/spell identity; runtime actor paths do not establish persistent IDs. No validated player-death or save-slot API was found in the inspected source. These block automatic rival behavior. The official Creator Kit documentation has now been read for the separate appearance-only slice; its native execution is still pending.
 
 Before an in-game build, establish a working loader/toolchain, an eligible enemy's stable identity, landed-spell and player-death events, and a safe mapping of mod checkpoints to character/save slots. Then prove a rival returns after a real save/reload and that adaptations affect only that rival. Back up the actual saves/config and record a restore path before modded launches. Loader installation and automated input require separate permission under the toolkit's instructions; neither is attempted by this project.
 

@@ -1,7 +1,8 @@
 # Read-only: reports version/loader metadata; installs nothing and never launches the game.
 param(
     [string]$GameRoot = 'C:\Program Files (x86)\Steam\steamapps\common\Hogwarts Legacy',
-    [string]$ShadowOfWarRoot = ''
+    [string]$ShadowOfWarRoot = '',
+    [string]$CreatorKitRoot = ''
 )
 $ErrorActionPreference = 'Stop'
 if (-not (Test-Path -LiteralPath $GameRoot -PathType Container)) {
@@ -112,14 +113,66 @@ if (-not [string]::IsNullOrWhiteSpace($ShadowOfWarRoot)) {
     $shadow['top_level_archive_count'] = $archives.Count
     foreach ($archive in $archives) { $shadow['top_level_archive_bytes'] += $archive.Length }
 }
+
+# Creator Kit metadata only. Launch/account authentication remains with Epic.
+$kit = [ordered]@{
+    detected = $false
+    detection_scope = 'Explicit -CreatorKitRoot, or two conventional installation folders'
+    status = 'not_found_in_searched_locations'
+    executable = $null
+    engine_build = $null
+}
+if ([string]::IsNullOrWhiteSpace($CreatorKitRoot)) {
+    $kitCandidates = @()
+    foreach ($candidate in @(
+        'C:\Program Files\HogwartsLegacyCreatorKit',
+        'C:\Program Files\Epic Games\HogwartsLegacyCreatorKit'
+    )) {
+        if (Test-Path -LiteralPath (Join-Path $candidate 'Engine\Binaries\Win64\HogwartsLegacyCreatorKit.exe') -PathType Leaf) {
+            $kitCandidates += $candidate
+        }
+    }
+    if ($kitCandidates.Count -eq 1) { $CreatorKitRoot = $kitCandidates[0] }
+    elseif ($kitCandidates.Count -gt 1) { $kit['status'] = 'multiple_candidates_pass_CreatorKitRoot' }
+}
+if (-not [string]::IsNullOrWhiteSpace($CreatorKitRoot)) {
+    if (-not (Test-Path -LiteralPath $CreatorKitRoot -PathType Container)) {
+        throw "Creator Kit directory not found: $CreatorKitRoot"
+    }
+    $resolvedKit = (Resolve-Path -LiteralPath $CreatorKitRoot).Path
+    $kitExe = Join-Path $resolvedKit 'Engine\Binaries\Win64\HogwartsLegacyCreatorKit.exe'
+    if (Test-Path -LiteralPath $kitExe -PathType Leaf) {
+        $file = Get-Item -LiteralPath $kitExe
+        $kit['detected'] = $true
+        $kit['status'] = 'executable_metadata_observed_not_runtime_validated'
+        $kit['executable'] = [ordered]@{
+            relative_path = 'Engine\Binaries\Win64\HogwartsLegacyCreatorKit.exe'
+            file_version = $file.VersionInfo.FileVersion
+            product_version = $file.VersionInfo.ProductVersion
+            bytes = $file.Length
+        }
+        $buildVersion = Join-Path $resolvedKit 'Engine\Build\Build.version'
+        if (Test-Path -LiteralPath $buildVersion -PathType Leaf) {
+            $engine = Get-Content -LiteralPath $buildVersion -Raw | ConvertFrom-Json
+            $kit['engine_build'] = [ordered]@{
+                major = $engine.MajorVersion
+                minor = $engine.MinorVersion
+                patch = $engine.PatchVersion
+                changelist = $engine.Changelist
+                compatible_changelist = $engine.CompatibleChangelist
+            }
+        }
+    } else { $kit['status'] = 'directory_present_but_creator_kit_executable_missing' }
+}
 [ordered]@{
-    probe_version = 2
+    probe_version = 3
     platform = 'Windows'
     steam_build_id = $buildID
     executables = $executables
     loader_path_presence = $loaderPresence
     content_package_counts = $packageCounts
     shadow_of_war = $shadow
+    creator_kit = $kit
     save_directory_present = Test-Path -LiteralPath (Join-Path $env:LOCALAPPDATA 'Hogwarts Legacy\Saved\SaveGames')
     note = 'File presence does not establish loader/model compatibility. No save or model contents or credentials were read; no files were changed.'
 } | ConvertTo-Json -Depth 5

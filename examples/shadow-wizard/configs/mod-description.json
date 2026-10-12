@@ -1,0 +1,9 @@
+{
+  "mod_name": "ShadowWizardAppearance",
+  "hairstyle_name": "SWPlaceholderHair",
+  "character_piece_name": "DA_SWPlaceholderHairPiece",
+  "summary": "An original visible hair-slot marker for testing an appearance-only player avatar workflow.",
+  "description": "Adds a selectable original placeholder HairStyle through the official Creator Kit avatar system. It does not replace the player controller, movement, animation system, combat, spells or progression. This development build requires Creator Kit authoring/cloud cooking and has not yet been tested in Hogwarts Legacy. Talion assets and rival gameplay integration are separate unfinished features.",
+  "status": "development_not_game_verified",
+  "note": "This is a source project description for copying into the official UI, not a Creator Kit registration manifest. Use a new mod-owned icon/logo from the editor; do not publish private rig FBX files."
+}
