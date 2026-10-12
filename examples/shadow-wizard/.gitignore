@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.local/
+!uv.lock
+# Local rig derivatives and Creator Kit output are never source-control inputs.
+*.fbx
+*.blend
+*.blend1
+*.uasset
+*.uexp
+*.ubulk
+*.pak
+*.utoc
+*.ucas
+*.zip
